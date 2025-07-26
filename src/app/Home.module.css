@@ -1,0 +1,130 @@
+/* General Body & Typography */
+.main {
+  margin: 40px auto;
+  max-width: 1200px; 
+  padding: 0 20px; 
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+.heading {
+  font-size: 2.5em;
+  color: #2E8B57; 
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Search Section */
+.searchContainer {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.searchLabel {
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.searchTermDisplay {
+  font-weight: bold;
+  color: #4CAF50; 
+}
+
+.searchInput {
+  width: 300px; 
+  padding: 12px 15px;
+  border: 1px solid #b0b0b0;
+  border-radius: 5px;
+  font-size: 1em;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.searchInput:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.25); 
+  outline: none; 
+}
+
+.resetButton {
+  margin-left: 15px;
+  padding: 12px 20px;
+  background-color: #607d8b; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+}
+
+.resetButton:hover {
+  background-color: #546e7a;
+  transform: translateY(-1px); 
+}
+
+.resetButton:active {
+  background-color: #455a64;
+  transform: translateY(0);
+}
+
+/* Table Styles */
+.tableContainer {
+  overflow-x: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.advocatesTable {
+  width: 100%;
+  border-collapse: collapse; 
+  margin-top: 20px;
+  font-size: 0.95em;
+}
+
+.advocatesTable th,
+.advocatesTable td {
+  border: 1px solid #e0e0e0;
+  padding: 12px 15px;
+  text-align: left;
+}
+
+.advocatesTable th {
+  background-color: #2E8B57; 
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.advocatesTable tbody tr:nth-child(even) {
+  background-color: #f8fcf8;
+}
+
+.advocatesTable tbody tr:hover {
+  background-color: #e8f5e9; 
+  cursor: default; 
+}
+
+.noResultsMessage {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 1.1em;
+  color: #888;
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+}
+
+/* For Specialties column */
+.specialtyItem {
+  padding: 3px 0;
+  color: #4a4a4a;
+}
