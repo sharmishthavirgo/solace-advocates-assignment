@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState, useMemo, useCallback } from "react";
-import styles from './Home.module.css'; 
+import styles from './Home.module.css';
 
 type AdvocateType = {
   firstName: string;
@@ -17,12 +17,43 @@ type AdvocatesApiResponse = {
   data: AdvocateType[];
 };
 
+// Define the structure for a table column
+// 'key' is a keyof AdvocateType to ensure type safety when accessing advocate properties
+// 'render' is an optional function for custom cell rendering (e.g., for arrays like specialties)
+type TableColumn = {
+  header: string;
+  key: keyof AdvocateType; // Use keyof to ensure it's a valid key from AdvocateType
+  render?: (advocate: AdvocateType) => React.ReactNode; // Optional render function for complex cells
+};
+
 export default function Home() {
   const [advocates, setAdvocates] = useState<AdvocateType[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  // Define table columns
+  // This array defines the order and content of your table columns
+  const columns: TableColumn[] = useMemo(() => [
+    { header: "First Name", key: "firstName" },
+    { header: "Last Name", key: "lastName" },
+    { header: "City", key: "city" },
+    { header: "Degree", key: "degree" },
+    {
+      header: "Specialties",
+      key: "specialties",
+      render: (advocate) => (
+        // Render each specialty item within a div
+        advocate.specialties.map((s, idx) => (
+          <div key={idx} className={styles.specialtyItem}>{s}</div>
+        ))
+      ),
+    },
+    { header: "Years of Experience", key: "yearsOfExperience" },
+    { header: "Phone Number", key: "phoneNumber" },
+  ], []); 
+
+ 
   useEffect(() => {
     const fetchAdvocates = async () => {
       setLoading(true);
@@ -45,31 +76,30 @@ export default function Home() {
     fetchAdvocates();
   }, []);
 
+  // Memoize the filtered advocates to prevent re-calculation on every render
+  // unless advocates or searchTerm changes.
   const filteredAdvocates = useMemo(() => {
     if (!searchTerm) {
-      return advocates;
+      return advocates; // If no search term, show all advocates
     }
     const lowerCaseSearchTerm = searchTerm.toLowerCase();
     return advocates.filter((advocate) => {
-      const { firstName, lastName, city, degree, specialties, yearsOfExperience, phoneNumber } = advocate;
-      if (firstName.toLowerCase().includes(lowerCaseSearchTerm) ||
-          lastName.toLowerCase().includes(lowerCaseSearchTerm) ||
-          city.toLowerCase().includes(lowerCaseSearchTerm) ||
-          degree.toLowerCase().includes(lowerCaseSearchTerm)) {
-        return true;
-      }
-      if (specialties.some(specialty => specialty.toLowerCase().includes(lowerCaseSearchTerm))) {
-        return true;
-      }
-      if (yearsOfExperience.toString().includes(lowerCaseSearchTerm)) {
-        return true;
-      }
-      if (phoneNumber.toString().includes(lowerCaseSearchTerm)) {
-          return true;
+      for (const column of columns) {
+        const value = advocate[column.key]; 
+
+        if (Array.isArray(value)) { // Handle specialty array specifically
+          if (value.some(item => String(item).toLowerCase().includes(lowerCaseSearchTerm))) {
+            return true;
+          }
+        } else if (value !== undefined && value !== null) { // Handle other types (numbers, strings)
+          if (String(value).toLowerCase().includes(lowerCaseSearchTerm)) {
+            return true;
+          }
+        }
       }
       return false;
     });
-  }, [advocates, searchTerm]);
+  }, [advocates, searchTerm, columns]); // Add columns to dependency array because search logic depends on it
 
   const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
@@ -130,29 +160,21 @@ export default function Home() {
           <table className={styles.advocatesTable}>
             <thead>
               <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>City</th>
-                <th>Degree</th>
-                <th>Specialties</th>
-                <th>Years of Experience</th>
-                <th>Phone Number</th>
+                {columns.map((column) => (
+                  <th key={column.key}>{column.header}</th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {filteredAdvocates.map((advocate) => (
                 <tr key={advocate.phoneNumber}>
-                  <td>{advocate.firstName}</td>
-                  <td>{advocate.lastName}</td>
-                  <td>{advocate.city}</td>
-                  <td>{advocate.degree}</td>
-                  <td>
-                    {advocate.specialties.map((s, idx) => (
-                      <div key={idx} className={styles.specialtyItem}>{s}</div>
-                    ))}
-                  </td>
-                  <td>{advocate.yearsOfExperience}</td>
-                  <td>{advocate.phoneNumber}</td>
+                
+                  {columns.map((column) => (
+                    <td key={column.key}>
+                     
+                      {column.render ? column.render(advocate) : advocate[column.key]}
+                    </td>
+                  ))}
                 </tr>
               ))}
             </tbody>
