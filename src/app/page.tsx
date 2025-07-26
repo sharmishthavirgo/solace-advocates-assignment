@@ -43,7 +43,6 @@ export default function Home() {
       header: "Specialties",
       key: "specialties",
       render: (advocate) => (
-        // Render each specialty item within a div
         advocate.specialties.map((s, idx) => (
           <div key={idx} className={styles.specialtyItem}>{s}</div>
         ))
@@ -130,9 +129,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <h1 className={styles.heading}>Solace Advocates</h1>
-
       <div className={styles.searchContainer}>
-        <p className={styles.searchLabel}>Search</p>
         <p>
           Searching for: <span className={styles.searchTermDisplay}>{searchTerm}</span>{" "}
         </p>
